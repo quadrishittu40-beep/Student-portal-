@@ -1,0 +1,6 @@
+{
+  "appId": "ng.edu.lasu.islamicstudies.personal",
+  "appName": "LASU Student",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}

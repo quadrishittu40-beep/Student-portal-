@@ -1,0 +1,19 @@
+{
+  "name": "lasu-islamic-studies-student-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal LASU Islamic Studies Education student app",
+  "scripts": {
+    "build": "vite build",
+    "android:sync": "npm run build && cap sync android",
+    "android:open": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/cli": "^6.2.0",
+    "@capacitor/core": "^6.2.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}
