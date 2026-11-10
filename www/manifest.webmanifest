@@ -1,0 +1,10 @@
+{
+  "name": "LASU Islamic Studies Education Portal",
+  "short_name": "LASU Student",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f1f8fd",
+  "theme_color": "#287bb8",
+  "description": "Personal student learning and academic record companion.",
+  "icons": []
+}

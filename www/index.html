@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#287bb8">
+<meta name="description" content="Personal LASU Islamic Studies Education student portal">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css">
+<title>LASU Student Portal</title>
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand-mark">ل</div>
+    <div><div class="eyebrow">LAGOS STATE UNIVERSITY</div><div class="brand-title">STUDENT PORTAL</div></div>
+    <button class="icon-btn" id="installBtn" title="Install app" hidden>＋</button>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-copy"><span class="pill">PERSONAL ACADEMIC SPACE</span><h1>Assalamu Alaikum,</h1><p>Welcome to your Islamic Studies Education portal.</p></div>
+      <div class="hero-pattern">۞</div>
+    </section>
+
+    <section class="profile-card card">
+      <div class="profile-head">
+        <img id="profilePhoto" class="avatar" src="assets/student-photo.jpg" alt="Student profile photograph">
+        <div class="profile-name"><span class="eyebrow">STUDENT PROFILE</span><h2>SHITTU QUADRI ADESHINA</h2><span class="muted">Islamic Studies Education</span><span class="status">Personal profile</span></div>
+      </div>
+      <div class="profile-grid">
+        <div><small>Matriculation No.</small><strong>230125013</strong></div>
+        <div><small>Institution</small><strong>Lagos State University</strong></div>
+        <div><small>Date of birth</small><strong>17 February 1995</strong></div>
+        <div><small>Gender</small><strong>Male</strong></div>
+        <div><small>Admission</small><strong>December 2023</strong></div>
+        <div><small>Programme</small><strong>4-year programme</strong></div>
+      </div>
+    </section>
+
+    <nav class="tabs" aria-label="Main sections">
+      <button class="tab active" data-tab="home">Overview</button>
+      <button class="tab" data-tab="courses">Courses</button>
+      <button class="tab" data-tab="exam">CBT Exams</button>
+      <button class="tab" data-tab="results">Results</button>
+    </nav>
+
+    <section id="home" class="panel active">
+      <div class="section-title"><div><span class="eyebrow">YOUR JOURNEY</span><h2>Academic progress</h2></div><span class="muted">100L–400L</span></div>
+      <div class="level-track" id="levelTrack"></div>
+      <div class="stats-grid">
+        <div class="stat-card"><span class="stat-icon">▤</span><strong id="courseCount">24</strong><small>Sample courses</small></div>
+        <div class="stat-card"><span class="stat-icon">✓</span><strong id="examCount">0</strong><small>Practice attempts</small></div>
+        <div class="stat-card"><span class="stat-icon">★</span><strong id="gpaValue">—</strong><small>Recorded CGPA</small></div>
+      </div>
+      <div class="card quick-card"><div><span class="eyebrow">QUICK ACCESS</span><h3>Continue your studies</h3><p>Browse course outlines, practise with sample questions, or enter verified semester grades.</p></div><button class="primary-btn" data-go="courses">Explore courses <span>→</span></button></div>
+      <p class="notice">Academic year, level and course offerings should be confirmed against your official LASU registration records. Sample courses are for planning and learning only.</p>
+    </section>
+
+    <section id="courses" class="panel">
+      <div class="section-title"><div><span class="eyebrow">LEARNING PLAN</span><h2>Course catalogue</h2></div></div>
+      <label class="field-label" for="levelSelect">Select academic level</label>
+      <select id="levelSelect" class="select-input"><option>100 Level</option><option>200 Level</option><option>300 Level</option><option>400 Level</option></select>
+      <div id="courseList" class="course-list"></div>
+      <p class="notice">These are illustrative course titles, not confirmed LASU course codes or an official curriculum. Add your approved courses and credit units using the edit controls.</p>
+      <div class="card editor-card">
+        <h3>Add a course</h3>
+        <div class="form-grid"><input id="newCourseCode" placeholder="Course code (e.g. ISE 201)"><input id="newCourseTitle" placeholder="Course title"><input id="newCourseUnits" type="number" min="1" max="12" placeholder="Credit units"></div>
+        <button id="addCourseBtn" class="primary-btn">Add course</button>
+      </div>
+    </section>
+
+    <section id="exam" class="panel">
+      <div class="section-title"><div><span class="eyebrow">SELF-ASSESSMENT</span><h2>CBT practice centre</h2></div><span class="pill">Sample quiz</span></div>
+      <p class="muted">Try this short Islamic Studies practice test. It is not an official LASU examination.</p>
+      <div id="quizArea" class="quiz-card">
+        <div class="quiz-top"><span id="questionNumber">QUESTION 1 OF 5</span><span id="quizProgress">20%</span></div>
+        <div class="progress"><span id="progressBar"></span></div>
+        <h3 id="questionText"></h3>
+        <div id="answerOptions" class="options"></div>
+        <div class="quiz-actions"><button id="nextQuestion" class="primary-btn" disabled>Next question →</button></div>
+      </div>
+      <div id="quizResult" class="card result-card" hidden></div>
+      <button id="restartQuiz" class="secondary-btn" hidden>Retake practice test</button>
+    </section>
+
+    <section id="results" class="panel">
+      <div class="section-title"><div><span class="eyebrow">ACADEMIC RECORD</span><h2>Results & GPA</h2></div></div>
+      <div class="card gpa-card"><span class="eyebrow">CALCULATED CGPA</span><strong id="cgpaLarge">—</strong><small id="gpaCaption">Enter verified course grades to calculate your GPA.</small></div>
+      <div class="card editor-card">
+        <h3>Record a course result</h3>
+        <div class="form-grid">
+          <select id="resultLevel"><option>100 Level</option><option>200 Level</option><option>300 Level</option><option>400 Level</option></select>
+          <input id="resultCode" placeholder="Course code">
+          <input id="resultTitle" placeholder="Course title">
+          <input id="resultUnits" type="number" min="1" max="12" placeholder="Credit units">
+          <select id="resultGrade"><option value="">Select grade</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+        </div>
+        <button id="saveResultBtn" class="primary-btn">Save result</button>
+      </div>
+      <div id="resultsList" class="results-list"></div>
+      <p class="notice">No official grades or CGPA have been supplied. Results entered here are stored on this device only and are not verified or issued by LASU.</p>
+    </section>
+  </main>
+  <footer><strong>LASU • ISLAMIC STUDIES EDUCATION</strong><span>Personal student learning companion</span><span>Not an official university portal</span></footer>
+</div>
+<div id="toast" class="toast" role="status"></div>
+<script src="app.js"></script>
+</body>
+</html>
