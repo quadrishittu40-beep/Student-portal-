@@ -4,7 +4,9 @@
   "private": true,
   "description": "Personal LASU Islamic Studies Education student app",
   "scripts": {
+    "dev": "vite --host 0.0.0.0",
     "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
     "android:sync": "npm run build && cap sync android",
     "android:open": "cap open android"
   },
