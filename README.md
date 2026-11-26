@@ -3,6 +3,7 @@
 This is a personal student learning companion for SHITTU QUADRI ADESHINA. It is not an official LASU portal and is not connected to LASU systems.
 
 ## Included
+- Lagos State University crest in the portal header, browser tab and installed-app icon
 - Student profile with the supplied portrait and details
 - 100L–400L sample course catalogue; add/remove courses
 - Five-question Islamic Studies CBT practice quiz with marking and explanations

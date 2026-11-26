@@ -6,5 +6,7 @@
   "background_color": "#f1f8fd",
   "theme_color": "#287bb8",
   "description": "Personal student learning and academic record companion.",
-  "icons": []
+  "icons": [
+    { "src": "assets/lasu-crest.jpg", "sizes": "565x543", "type": "image/jpeg", "purpose": "any" }
+  ]
 }
