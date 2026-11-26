@@ -5,6 +5,10 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   root: 'www',
   base: './',
+  server: {
+    host: '0.0.0.0',
+    allowedHosts: ['.e2b.app', 'localhost']
+  },
   build: {
     outDir: '../dist',
     emptyOutDir: true
