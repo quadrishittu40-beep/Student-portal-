@@ -19,16 +19,25 @@ This is a personal student learning companion for SHITTU QUADRI ADESHINA. It is 
 2. In this folder run `npm install`.
 3. Run `npm run dev` and open the local address shown.
 
-## Build an Android APK
-You need Android Studio, Android SDK, Java (as required by your installed Android Gradle Plugin), and Node.js.
-1. Run `npm install`.
-2. Run `npx cap add android` (one-time Android project generation).
-3. Run `npm run android:sync`.
-4. Run `npx cap open android`.
-5. In Android Studio choose **Build > Build Bundle(s) / APK(s) > Build APK(s)**.
-6. For a signed release, use **Build > Generate Signed Bundle / APK** and protect the signing key.
+## Download the Android app (APK)
+The Android project is committed in `android/` and every push to `main` builds an installable APK automatically.
 
-The source project is prepared for Capacitor 6. The Android platform folder is generated locally by `npx cap add android`; this archive does not contain a signed APK.
+1. Open the **Releases** page: <https://github.com/quadrishittu40-beep/Student-portal-/releases/latest>
+2. Download `LASU-Student-Portal-<number>.apk`.
+3. Open the file on the phone and allow installation from that source when prompted.
+   It is a debug-signed build, so Android will warn that the developer is unknown — that is expected for a personal build.
+4. The app runs fully offline: courses, results, CGPA and practice tests are bundled, and your edits stay on the device.
+
+You can also grab the APK from the **Actions** tab (`Build Android app` → latest run → Artifacts).
+
+App identity: `ng.edu.lasu.islamicstudies.personal`, name **LASU Student**, icon and splash generated from the university crest by `npm run icons`.
+
+## Build the APK yourself
+You need Android Studio (or the Android SDK) with Java 17, plus Node.js.
+1. Run `npm install`.
+2. Run `npm run android:apk` — this builds the web assets, syncs Capacitor and runs Gradle.
+3. The APK lands in `android/app/build/outputs/apk/debug/app-debug.apk`.
+4. For Play Store distribution, open `android/` in Android Studio and use **Build > Generate Signed Bundle / APK**, then protect the signing key.
 
 ## Important data notes
 - Course codes, units, status letters, grades, semester GPA figures and the CGPA are transcribed from the LASU statement of result for matriculation number 230125013, printed 31 July 2026. The statement lists course codes only, so the app shows codes and does not invent course titles.
