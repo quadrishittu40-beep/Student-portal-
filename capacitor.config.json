@@ -2,5 +2,11 @@
   "appId": "ng.edu.lasu.islamicstudies.personal",
   "appName": "LASU Student",
   "webDir": "dist",
-  "bundledWebRuntime": false
+  "android": {
+    "backgroundColor": "#f1f8fd",
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
 }
