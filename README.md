@@ -20,17 +20,22 @@ This is a personal student learning companion for SHITTU QUADRI ADESHINA. It is 
 3. Run `npm run dev` and open the local address shown.
 
 ## Download the Android app (APK)
-The Android project is committed in `android/` and every push to `main` builds an installable APK automatically.
+Every push to `main` builds an installable APK automatically.
 
-1. Open the **Releases** page: <https://github.com/quadrishittu40-beep/Student-portal-/releases/latest>
-2. Download `LASU-Student-Portal-<number>.apk`.
+1. Open the **Releases** page: <https://github.com/quadrishittu40-beep/Student-portal-/releases>
+2. Download the newest `LASU-Student-Portal-signed-<n>.apk` (signed release).
+   The `debug-latest` release also carries an unsigned debug APK if you just want to try it.
 3. Open the file on the phone and allow installation from that source when prompted.
-   It is a debug-signed build, so Android will warn that the developer is unknown — that is expected for a personal build.
 4. The app runs fully offline: courses, results, CGPA and practice tests are bundled, and your edits stay on the device.
 
-You can also grab the APK from the **Actions** tab (`Build Android app` → latest run → Artifacts).
-
 App identity: `ng.edu.lasu.islamicstudies.personal`, name **LASU Student**, icon and splash generated from the university crest by `npm run icons`.
+
+## Release signing
+Signed builds are produced by `.github/workflows/android-release.yml` using a
+private keystore held in GitHub Actions secrets. The signing identity is the
+app's permanent identity — see **[SIGNING.md](SIGNING.md)** for setup, what CI
+does, and how to back the key up. Keystores and passwords are git-ignored and
+must never be committed to this (public) repository.
 
 ## Build the APK yourself
 You need Android Studio (or the Android SDK) with Java 17, plus Node.js.
