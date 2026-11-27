@@ -1,0 +1,147 @@
+name: Build signed release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Signed AAB + APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Point Gradle at the preinstalled Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Build web assets
+        run: npm run build
+
+      - name: Sync Capacitor Android project
+        run: npx cap sync android
+
+      # ---------------------------------------------------------------------
+      # The keystore arrives from repository secrets, is written to a temp
+      # path, and is discarded when the runner is destroyed. It is never
+      # committed, echo'd, or uploaded as an artifact.
+      #
+      # NOTE: this repository is public. Anything uploaded as a workflow
+      # artifact is downloadable by anyone, so the signing key must never be
+      # passed through an artifact. It belongs in Secrets only.
+      # ---------------------------------------------------------------------
+      - name: Restore signing keystore
+        id: signing
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ] || [ -z "$KEYSTORE_PASSWORD" ] || [ -z "$KEY_ALIAS" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "## Signed build skipped"
+              echo ""
+              echo "The signing secrets are not configured yet, so no release was published."
+              echo "Add \`ANDROID_KEYSTORE_BASE64\`, \`ANDROID_KEYSTORE_PASSWORD\`, \`ANDROID_KEY_ALIAS\`"
+              echo "and \`ANDROID_KEY_PASSWORD\`, then re-run this workflow."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          KSPATH="$RUNNER_TEMP/lasu-release.p12"
+          printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$KSPATH"
+          chmod 600 "$KSPATH"
+
+          # Fail loudly here rather than deep inside Gradle if the secrets are wrong.
+          if ! keytool -list -keystore "$KSPATH" -storetype PKCS12 \
+                 -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS" > /dev/null 2>&1; then
+            echo "::error::Cannot read the keystore with the supplied password and alias. Check ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD and ANDROID_KEY_ALIAS."
+            exit 1
+          fi
+
+          echo "ANDROID_KEYSTORE_PATH=$KSPATH" >> "$GITHUB_ENV"
+          echo "ANDROID_KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> "$GITHUB_ENV"
+          echo "ANDROID_KEY_ALIAS=$KEY_ALIAS" >> "$GITHUB_ENV"
+          echo "ANDROID_KEY_PASSWORD=${KEY_PASSWORD:-$KEYSTORE_PASSWORD}" >> "$GITHUB_ENV"
+          chmod +x android/gradlew
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+          echo "Keystore restored and verified."
+
+      - name: Build signed AAB and APK
+        if: steps.signing.outputs.ready == 'true'
+        run: |
+          cd android
+          ./gradlew \
+            -PversionCode=${{ github.run_number }} \
+            -PversionName=1.0.${{ github.run_number }} \
+            bundleRelease assembleRelease \
+            --no-daemon --stacktrace
+
+      - name: Verify the signature
+        if: steps.signing.outputs.ready == 'true'
+        run: |
+          APK=$(ls android/app/build/outputs/apk/release/*.apk | head -1)
+          APKSIGNER=$(find "$ANDROID_SDK_ROOT/build-tools" -name apksigner | sort -V | tail -1)
+          "$APKSIGNER" verify --verbose --print-certs "$APK" | tee /dev/stderr | grep -q "Verifies"
+          echo "Signature verified for $APK"
+
+      - name: Publish the signed release
+        if: steps.signing.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p out
+          cp android/app/build/outputs/apk/release/*.apk \
+             "out/LASU-Student-Portal-signed-${{ github.run_number }}.apk"
+          cp android/app/build/outputs/bundle/release/*.aab \
+             "out/LASU-Student-Portal-${{ github.run_number }}.aab"
+
+          TAG="app-latest"
+          gh release delete "$TAG" --yes --cleanup-tag || true
+          gh release create "$TAG" out/* \
+            --title "LASU Student Portal — signed Android release" \
+            --notes "Signed release of the LASU Islamic Studies Education student portal (matric 230125013).
+
+          **Install on a phone:** download the \`.apk\` and open it.
+          **Play Store:** upload the \`.aab\` in the Play Console.
+
+          Version code ${{ github.run_number }}. Every build uses the same signing key, so it installs as an update over the previous version."
+
+      - name: Summary
+        if: steps.signing.outputs.ready == 'true'
+        run: |
+          {
+            echo "## Signed release published"
+            echo ""
+            echo "| Artifact | Use |"
+            echo "| --- | --- |"
+            echo "| \`LASU-Student-Portal-signed-${{ github.run_number }}.apk\` | install directly on a phone |"
+            echo "| \`LASU-Student-Portal-${{ github.run_number }}.aab\` | upload to the Play Console |"
+            echo ""
+            echo "Version code: ${{ github.run_number }}"
+            echo ""
+            echo "Download: https://github.com/quadrishittu40-beep/Student-portal-/releases/tag/app-latest"
+          } >> "$GITHUB_STEP_SUMMARY"

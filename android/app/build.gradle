@@ -1,14 +1,38 @@
 apply plugin: 'com.android.application'
 
+/* ---------------------------------------------------------------------------
+ * Release signing
+ *
+ * Nothing secret lives in this file. The GitHub Actions workflow restores the
+ * keystore from repository secrets and exports these environment variables:
+ *
+ *   ANDROID_KEYSTORE_PATH      absolute path to the PKCS#12 keystore
+ *   ANDROID_KEYSTORE_PASSWORD  keystore password
+ *   ANDROID_KEY_ALIAS          key alias
+ *   ANDROID_KEY_PASSWORD       key password
+ *
+ * When the variables are absent (local build, fork, pull request) the release
+ * build type simply stays unsigned instead of failing.
+ * ------------------------------------------------------------------------- */
+
+def keystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
+def hasKeystore = keystorePath != null && !keystorePath.trim().isEmpty() && file(keystorePath).exists()
+
+/* CI passes -PversionCode / -PversionName so each signed build installs as an
+   update over the previous one. */
+def buildVersionCode = project.hasProperty("versionCode") ? project.property("versionCode").toString().toInteger() : 1
+def buildVersionName = project.hasProperty("versionName") ? project.property("versionName").toString() : "1.0"
+
 android {
     namespace "ng.edu.lasu.islamicstudies.personal"
     compileSdk rootProject.ext.compileSdkVersion
+
     defaultConfig {
         applicationId "ng.edu.lasu.islamicstudies.personal"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode buildVersionCode
+        versionName buildVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,10 +40,28 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+
+    signingConfigs {
+        release {
+            if (hasKeystore) {
+                storeFile file(keystorePath)
+                storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+                /* The keystore is a PKCS#12 container (any JDK can read it),
+                   not a legacy JKS. AGP accepts it as long as we say so. */
+                storeType = "PKCS12"
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (hasKeystore) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }

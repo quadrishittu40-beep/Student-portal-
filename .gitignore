@@ -13,3 +13,12 @@ android/app/src/main/res/xml/config.xml
 android/capacitor-cordova-android-plugins/
 *.apk
 *.aab
+
+# Signing material — never commit a keystore or its passwords
+signing/
+*.p12
+*.jks
+*.keystore
+!android/app/debug.keystore
+keystore.properties
+.env*
