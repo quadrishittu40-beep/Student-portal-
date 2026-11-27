@@ -28,13 +28,12 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android platform and build tools
+      - name: Point Gradle at the preinstalled Android SDK
         run: |
-          yes | sdkmanager --licenses > /dev/null
-          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
+          ls "$ANDROID_SDK_ROOT/platforms" || true
+          ls "$ANDROID_SDK_ROOT/build-tools" || true
 
       - name: Install dependencies
         run: npm ci || npm install
