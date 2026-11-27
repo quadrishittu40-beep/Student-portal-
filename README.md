@@ -5,9 +5,12 @@ This is a personal student learning companion for SHITTU QUADRI ADESHINA. It is 
 ## Included
 - Lagos State University crest in the portal header, browser tab and installed-app icon
 - Student profile with the supplied portrait and details
-- 100L–400L sample course catalogue; add/remove courses
+- Course structure and results taken from the official LASU statement of result for 230125013: all six semesters (100L–300L, 2023/2024–2025/2026), every course code, unit, status letter and grade, plus each semester's official TNU, TCP, GPA and CGPA
+- CGPA 4.30 recomputed live from the 123 recorded credit units and 529 grade points, matching the printed CGPA
+- Outstanding courses panel (ENT 302, FAC 201, GNS 301, ISL 208) and the academic standing notes from the statement
+- Add your own 400L/future courses per level and semester; entries without a grade stay "pending" and do not affect the GPA
 - Five-question Islamic Studies CBT practice quiz with marking and explanations
-- Local results entry and GPA calculator using a 5-point scale (A=5 through F=0)
+- GPA calculator using the LASU 5-point scale (A=5 through F=0)
 - Browser offline cache and local-device storage
 - Capacitor project configuration for Android packaging
 
@@ -28,8 +31,9 @@ You need Android Studio, Android SDK, Java (as required by your installed Androi
 The source project is prepared for Capacitor 6. The Android platform folder is generated locally by `npx cap add android`; this archive does not contain a signed APK.
 
 ## Important data notes
-- The listed courses are illustrative examples, not a verified LASU curriculum or approved registration.
-- No official grades, GPA, CGPA, academic session, or semester results have been invented.
+- Course codes, units, status letters, grades, semester GPA figures and the CGPA are transcribed from the LASU statement of result for matriculation number 230125013, printed 31 July 2026. The statement lists course codes only, so the app shows codes and does not invent course titles.
+- Grade letters are derived from the statement's GP column on the 5-point scale (5=A, 4=B, 3=C, 2=D, 1=E, 0=F); every semester recomputes to the exact printed TNU, TCP, GPA and CGPA.
+- Any course, unit or grade you add yourself is your own entry, is labelled as such, and is stored on this device only.
 - Course and result entries are stored in browser/app local storage on this device. They are not uploaded to a server and will not automatically sync between devices.
 - This is a single-user personal app, not a secure university records system. Do not treat locally entered grades as official transcripts.
 - The profile photo is the image supplied in this conversation.
