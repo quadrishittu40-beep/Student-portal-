@@ -26,15 +26,15 @@
     <section class="profile-card card">
       <div class="profile-head">
         <img id="profilePhoto" class="avatar" src="assets/student-photo.jpg" alt="Student profile photograph">
-        <div class="profile-name"><span class="eyebrow">STUDENT PROFILE</span><h2>SHITTU QUADRI ADESHINA</h2><span class="muted">Islamic Studies Education</span><span class="status">Personal profile</span></div>
+        <div class="profile-name"><span class="eyebrow">STUDENT PROFILE</span><h2>SHITTU QUADRI ADESHINA</h2><span class="muted">Islamic Religious Studies Education</span><span class="status">Good Standing</span></div>
       </div>
       <div class="profile-grid">
         <div><small>Matriculation No.</small><strong>230125013</strong></div>
-        <div><small>Institution</small><strong>Lagos State University</strong></div>
-        <div><small>Date of birth</small><strong>17 February 1995</strong></div>
-        <div><small>Gender</small><strong>Male</strong></div>
-        <div><small>Admission</small><strong>December 2023</strong></div>
-        <div><small>Programme</small><strong>4-year programme</strong></div>
+        <div><small>Institution</small><strong>Lagos State University, Ojo</strong></div>
+        <div><small>Faculty</small><strong>Education</strong></div>
+        <div><small>Department</small><strong>Language, Arts &amp; Social Science Education</strong></div>
+        <div><small>Mode of entry</small><strong>UME</strong></div>
+        <div><small>Year of entry</small><strong>2023/2024</strong></div>
       </div>
     </section>
 
@@ -49,25 +49,53 @@
       <div class="section-title"><div><span class="eyebrow">YOUR JOURNEY</span><h2>Academic progress</h2></div><span class="muted">100L–400L</span></div>
       <div class="level-track" id="levelTrack"></div>
       <div class="stats-grid">
-        <div class="stat-card"><span class="stat-icon">▤</span><strong id="courseCount">24</strong><small>Sample courses</small></div>
+        <div class="stat-card"><span class="stat-icon">▤</span><strong id="courseCount">—</strong><small>Courses recorded</small></div>
+        <div class="stat-card"><span class="stat-icon">◎</span><strong id="unitCount">—</strong><small>Credit units</small></div>
         <div class="stat-card"><span class="stat-icon">✓</span><strong id="examCount">0</strong><small>Practice attempts</small></div>
-        <div class="stat-card"><span class="stat-icon">★</span><strong id="gpaValue">—</strong><small>Recorded CGPA</small></div>
       </div>
-      <div class="card quick-card"><div><span class="eyebrow">QUICK ACCESS</span><h3>Continue your studies</h3><p>Browse course outlines, practise with sample questions, or enter verified semester grades.</p></div><button class="primary-btn" data-go="courses">Explore courses <span>→</span></button></div>
-      <p class="notice">Academic year, level and course offerings should be confirmed against your official LASU registration records. Sample courses are for planning and learning only.</p>
+
+      <div class="card gpa-card home-gpa">
+        <div>
+          <span class="eyebrow">OFFICIAL CGPA</span>
+          <strong id="cgpaRing">—</strong>
+          <small>From your LASU statement of result • 123 credit units</small>
+        </div>
+        <div class="gpa-side">
+          <div><span>CTCP</span><b>529</b></div>
+          <div><span>Semesters</span><b id="semCount">—</b></div>
+          <div><span>Standing</span><b>Good</b></div>
+        </div>
+      </div>
+
+      <div class="card outstanding-card">
+        <span class="eyebrow">OUTSTANDING COURSES</span>
+        <div class="chip-row" id="outstandingList"></div>
+        <ul class="summary-notes" id="summaryNotes"></ul>
+      </div>
+
+      <div class="card quick-card"><div><span class="eyebrow">QUICK ACCESS</span><h3>Continue your studies</h3><p>Check your registered courses semester by semester, practise with sample questions, or review your graded results.</p></div><button class="primary-btn" data-go="courses">Explore courses <span>→</span></button></div>
+      <p class="notice">Course codes, units, grades and GPA figures on this app come from the LASU statement of result for 230125013 (printed 31 July 2026). Always confirm against the official portal before making decisions.</p>
     </section>
 
     <section id="courses" class="panel">
-      <div class="section-title"><div><span class="eyebrow">LEARNING PLAN</span><h2>Course catalogue</h2></div></div>
+      <div class="section-title"><div><span class="eyebrow">REGISTERED COURSES</span><h2>Course structure</h2></div></div>
       <label class="field-label" for="levelSelect">Select academic level</label>
       <select id="levelSelect" class="select-input"><option>100 Level</option><option>200 Level</option><option>300 Level</option><option>400 Level</option></select>
       <div id="courseList" class="course-list"></div>
-      <p class="notice">These are illustrative course titles, not confirmed LASU course codes or an official curriculum. Add your approved courses and credit units using the edit controls.</p>
+      <p class="notice">Verified semesters show the official unit, status, grade and GPA figures. Any course you add yourself is marked as your own entry and is stored only on this device.</p>
       <div class="card editor-card">
         <h3>Add a course</h3>
-        <div class="form-grid"><input id="newCourseCode" placeholder="Course code (e.g. ISE 201)"><input id="newCourseTitle" placeholder="Course title"><input id="newCourseUnits" type="number" min="1" max="12" placeholder="Credit units"></div>
+        <div class="form-grid">
+          <input id="newCourseCode" placeholder="Course code (e.g. ISS 341)">
+          <input id="newCourseTitle" placeholder="Course title (optional)">
+          <input id="newCourseUnits" type="number" min="1" max="12" placeholder="Credit units">
+          <select id="newCourseLevel"><option>100 Level</option><option>200 Level</option><option selected>300 Level</option><option>400 Level</option></select>
+          <select id="newCourseSemester"><option>First</option><option>Second</option></select>
+          <select id="newCourseGrade"><option value="">No grade yet</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+        </div>
         <button id="addCourseBtn" class="primary-btn">Add course</button>
       </div>
+      <button id="resetBtn" class="secondary-btn">Restore verified record</button>
     </section>
 
     <section id="exam" class="panel">
@@ -85,21 +113,18 @@
     </section>
 
     <section id="results" class="panel">
-      <div class="section-title"><div><span class="eyebrow">ACADEMIC RECORD</span><h2>Results & GPA</h2></div></div>
-      <div class="card gpa-card"><span class="eyebrow">CALCULATED CGPA</span><strong id="cgpaLarge">—</strong><small id="gpaCaption">Enter verified course grades to calculate your GPA.</small></div>
-      <div class="card editor-card">
-        <h3>Record a course result</h3>
-        <div class="form-grid">
-          <select id="resultLevel"><option>100 Level</option><option>200 Level</option><option>300 Level</option><option>400 Level</option></select>
-          <input id="resultCode" placeholder="Course code">
-          <input id="resultTitle" placeholder="Course title">
-          <input id="resultUnits" type="number" min="1" max="12" placeholder="Credit units">
-          <select id="resultGrade"><option value="">Select grade</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
-        </div>
-        <button id="saveResultBtn" class="primary-btn">Save result</button>
+      <div class="section-title"><div><span class="eyebrow">ACADEMIC RECORD</span><h2>Results &amp; GPA</h2></div></div>
+      <div class="card gpa-card"><span class="eyebrow">CALCULATED CGPA</span><strong id="cgpaLarge">—</strong><small id="gpaCaption">Recomputed from the verified course records.</small></div>
+      <div class="card record-card">
+        <span class="eyebrow">STATEMENT OF RESULT</span>
+        <div class="record-grid" id="recordMeta"></div>
       </div>
-      <div id="resultsList" class="results-list"></div>
-      <p class="notice">No official grades or CGPA have been supplied. Results entered here are stored on this device only and are not verified or issued by LASU.</p>
+      <div class="record-head">
+        <span>Code</span><span>Units</span><span>Status</span><span>Grade</span><span>Points</span>
+      </div>
+      <div id="semesterResults" class="semester-results"></div>
+      <p class="record-foot" id="recordFoot"></p>
+      <p class="notice">Grades and CGPA shown here are transcribed from the LASU statement of result for 230125013. Courses you add or edit stay on this device only and are not official university records.</p>
     </section>
   </main>
   <footer><strong>LASU • ISLAMIC STUDIES EDUCATION</strong><span>Personal student learning companion</span><span>Not an official university portal</span></footer>
