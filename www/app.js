@@ -364,8 +364,10 @@ $("#installBtn").onclick = async () => {
   }
 };
 
-if ("serviceWorker" in navigator && location.protocol !== "file:") {
-  navigator.serviceWorker.register("sw.js").catch(() => {});
+/* Relative registration so it also works when the app is served from a sub-path.
+   Inside the Android WebView the service worker is unnecessary (assets are local). */
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  navigator.serviceWorker.register(new URL("sw.js", import.meta.url)).catch(() => {});
 }
 
 /* ---------- boot ---------- */
