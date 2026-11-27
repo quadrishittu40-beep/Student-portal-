@@ -40,12 +40,16 @@ for (const [d, scale] of Object.entries(densities)) {
   const roundMask = Buffer.from(
     `<svg width="${size}" height="${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}" fill="#fff"/></svg>`
   );
-  const roundPlate = await sharp(W(size, size, BG))
+  /* Composite the logo and the mask in one pass: chained .composite() calls
+     replace each other, which produced blank icons. */
+  const base = await sharp(W(size, size, BG))
     .composite([{ input: logo, gravity: 'center' }])
-    .composite([{ input: roundMask, blend: 'dest-in' }])
     .png()
     .toBuffer();
-  await sharp(roundPlate).toFile(path.join(RES, `mipmap-${d}`, 'ic_launcher_round.png'));
+  await sharp(base)
+    .composite([{ input: roundMask, blend: 'dest-in' }])
+    .png()
+    .toFile(path.join(RES, `mipmap-${d}`, 'ic_launcher_round.png'));
 
   const fgSize = Math.round(108 * scale);
   const fgLogo = await crest(Math.round(fgSize * 0.54));
